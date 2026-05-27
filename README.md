@@ -1,7 +1,6 @@
-# Few-Shot CV Research — DTD & BSCD-FSL Benchmark
+# Few-Shot CV Research — DTD 
 
 > Projet de recherche en classification d'images par few-shot learning.  
-> Objectif : battre le SOTA sur EuroSAT (BSCD-FSL) et analyser les limites du ViT-B sur DTD.
 
 ---
 
@@ -10,34 +9,11 @@
 Ce projet explore deux directions complémentaires :
 
 1. **DTD (Describable Textures Dataset)** — analyse des limites du ViT-B pour la reconnaissance de textures, baseline à 76% (Split 1), SOTA à 84.4%
-2. **BSCD-FSL / EuroSAT** — cross-domain few-shot learning, entraîné sur miniImageNet uniquement, testé sur images satellites, SOTA à ~93.52% (CPLSR, 2025)
 
 ---
 
 
 ## Datasets
-
-### miniImageNet (méta-entraînement)
-- **Taille** : ~200 Mo
-- **Classes** : 100 (64 train / 16 val / 20 test)
-- **Images** : 600 par classe, 84×84 px
-- **Source** : [Kaggle](https://www.kaggle.com/datasets/arjunashok33/miniimagenet)
-- **Split** : Ravi & Larochelle (2017)
-
-```bash
-python scripts/download_miniimagenet.py --data_dir ./data
-```
-
-### EuroSAT RGB (test BSCD-FSL)
-- **Taille** : ~174 Mo
-- **Classes** : 10 (AnnualCrop, Forest, Highway, Industrial, ...)
-- **Images** : 27 000 images satellite Sentinel-2, 64×64 px
-- **Source** : [HuggingFace](https://huggingface.co/datasets/blanchon/EuroSAT_RGB)
-- **Protocole** : 5-way 5-shot, 600 épisodes, IC 95%
-
-```bash
-python scripts/install_datasets.py --only eurosat --data_dir ./data
-```
 
 ### DTD — Describable Textures Dataset
 - **Taille** : ~600 Mo
@@ -60,20 +36,7 @@ python scripts/install_datasets.py --only eurosat --data_dir ./data
 | Chaotic Contrastive | — | **84.4%** |
 
 > **Résultat obtenu** : ViT-B → Val 74.29%, **Test 75.98%** (Split 1)
-
-### BSCD-FSL — EuroSAT 5-way 5-shot
-
-| Méthode | Backbone | 1-shot | 5-shot |
-|---|---|---|---|
-| Baseline fine-tuning | ResNet-10 | ~49% | ~64% |
-| DINO + ProtoNet | ViT-S | ~79% | ~88% |
-| PMF | ViT-S | ~80% | ~89% |
-| StyleAdv | ViT-S | ~81% | ~90% |
-| IM-DCL | ViT | 77.14% | 89.47% |
-| **CPLSR** | **ViT-S** | — | **~93.52%** |
-
-> **Protocole** : méta-entraînement sur miniImageNet uniquement (pas de données médicales ni satellite)
-
+> 
 ---
 
 ## Analyse des résultats DTD
@@ -105,20 +68,15 @@ crystalline (98%), cobwebbed (98%), zigzagged (95%), frilly (95%), chequered (95
 
 ### Benchmarks
 
-- **BSCD-FSL** : Guo et al., *A Broader Study of Cross-Domain Few-Shot Learning*, ECCV 2020 — [arXiv:1912.07200](https://arxiv.org/abs/1912.07200) · [Code IBM](https://github.com/IBM/cdfsl-benchmark)
 - **DTD** : Cimpoi et al., *Describing Textures in the Wild*, CVPR 2014 — [Oxford VGG](https://www.robots.ox.ac.uk/~vgg/data/dtd/)
-- **EuroSAT** : Helber et al., *EuroSAT: A Novel Dataset*, IEEE JSTARS 2019 — [arXiv:1709.00029](https://arxiv.org/abs/1709.00029)
 
 ### SOTA à battre
 
-- **CPLSR** (EuroSAT SOTA, ~93.52% 5-shot) — Paeedeh et al., 2025 — [arXiv:2507.15243](https://arxiv.org/abs/2507.15243) · [Code](https://github.com/Naeem-Paeedeh/CPLSR)
 - **Chaotic Contrastive** (DTD SOTA, 84.4%) — Mai 2025
 
 ### Méthodes comparées
 
 - **DINO** : Caron et al., *Emerging Properties in Self-Supervised ViTs*, ICCV 2021
-- **PMF** : Hu et al., *Pushing the Limits of Simple Pipelines for Few-Shot Learning*, CVPR 2022
-- **StyleAdv** : Fu et al., *StyleAdv: Meta Style Adversarial Training for Cross-Domain FSL*, CVPR 2023
 - **IM-DCL** : *Enhancing Information Maximization with Distance-Aware Contrastive Learning*, 2024 — [arXiv:2403.01966](https://arxiv.org/abs/2403.01966)
 
 ---
@@ -148,12 +106,6 @@ python scripts/install_datasets.py --verify --data_dir ./data
 ```bash
 # Benchmark DTD (ViT-B + ResNet-50)
 python scripts/dtd_benchmark.py --data_dir ./data/dtd
-
-# Baseline BSCD-FSL sur EuroSAT (à venir)
-python scripts/baseline_bscd.py \
-    --train_dir ./data/miniImageNet/train \
-    --test_dir ./data/EuroSAT/images \
-    --n_way 5 --n_shot 5 --n_episodes 600
 ```
 
 ---
