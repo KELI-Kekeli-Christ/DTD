@@ -1,4 +1,4 @@
-# Few-Shot CV Research — DTD 
+# Few-Shot CV Research DTD 
 
 > Projet de recherche en classification d'images par few-shot learning.  
 
